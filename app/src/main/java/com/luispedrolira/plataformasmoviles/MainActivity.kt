@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.luispedrolira.plataformasmoviles.lab5.PantallaBasicFrontEnd
+import com.luispedrolira.plataformasmoviles.lab6.CounterScreen
 import com.luispedrolira.plataformasmoviles.ui.theme.PlataformasMovilesTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PlataformasMovilesTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    PantallaBasicFrontEnd(
+                    CounterScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

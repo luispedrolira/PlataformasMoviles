@@ -11,6 +11,13 @@ import com.luispedrolira.plataformasmoviles.ui.theme.PlataformasMovilesTheme
 fun CounterScreen(
     modifier: Modifier = Modifier
 ){
+    Counter()
+}
+
+@Composable
+private fun Counter(
+    modifier: Modifier = Modifier
+){
     CounterHeader()
     CounterStadistics()
     CounterFooter()
