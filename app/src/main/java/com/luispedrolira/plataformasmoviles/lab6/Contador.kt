@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -104,8 +105,74 @@ private fun CounterHeader(
 private fun CounterStadistics(
     modifier: Modifier = Modifier
 ){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
 
+        ContentStadistics(
+            stadisticTitle = "Total incrementos:",
+            stadisticValue = "7"
+        )
+        ContentStadistics(
+            stadisticTitle = "Total decrementos:",
+            stadisticValue = "2"
+        )
+        ContentStadistics(
+            stadisticTitle = "Valor máximo:",
+            stadisticValue = "5"
+        )
+        ContentStadistics(
+            stadisticTitle = "Valor mínimo:",
+            stadisticValue = "1"
+        )
+        ContentStadistics(
+            stadisticTitle = "Total cambios:",
+            stadisticValue = "9"
+        )
+        ContentStadistics(
+            stadisticTitle = "Historial:",
+            stadisticValue = ""
+        )
+
+        LazyRow {
+
+        }
+
+    }
 }
+
+@Composable
+private fun ContentStadistics(
+    modifier: Modifier = Modifier,
+    stadisticTitle: String,
+    stadisticValue: String
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 40.dp, end = 56.dp, top = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stadisticTitle,
+            style = MaterialTheme.typography.headlineSmall
+        )
+        Text(
+            text = stadisticValue,
+            style = MaterialTheme.typography.headlineSmall
+        )
+    }
+}
+
+@Composable
+private fun HistoryValues(
+
+){
+    //TODO: Valores del historial
+}
+
+
 
 @Composable
 private fun CounterFooter(
