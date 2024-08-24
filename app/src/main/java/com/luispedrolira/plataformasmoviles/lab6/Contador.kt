@@ -5,13 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -19,8 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.Modifier 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.luispedrolira.plataformasmoviles.ui.theme.PlataformasMovilesTheme
@@ -69,7 +73,7 @@ private fun CounterHeader(
             ) {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
-                        Icons.Default.Add,
+                        Icons.Default.Remove,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
@@ -110,32 +114,32 @@ private fun CounterStadistics(
             .fillMaxWidth()
     ) {
 
-        ContentStadistics(
+        ItemStadistics(
             stadisticTitle = "Total incrementos:",
             stadisticValue = "7"
         )
-        ContentStadistics(
+        ItemStadistics(
             stadisticTitle = "Total decrementos:",
             stadisticValue = "2"
         )
-        ContentStadistics(
+        ItemStadistics(
             stadisticTitle = "Valor máximo:",
             stadisticValue = "5"
         )
-        ContentStadistics(
+        ItemStadistics(
             stadisticTitle = "Valor mínimo:",
             stadisticValue = "1"
         )
-        ContentStadistics(
+        ItemStadistics(
             stadisticTitle = "Total cambios:",
             stadisticValue = "9"
         )
-        ContentStadistics(
+        ItemStadistics(
             stadisticTitle = "Historial:",
             stadisticValue = ""
         )
 
-        LazyRow {
+        LazyVerticalGrid(columns = GridCells.Fixed(5)) {
 
         }
 
@@ -143,7 +147,7 @@ private fun CounterStadistics(
 }
 
 @Composable
-private fun ContentStadistics(
+private fun ItemStadistics(
     modifier: Modifier = Modifier,
     stadisticTitle: String,
     stadisticValue: String
@@ -178,7 +182,20 @@ private fun HistoryValues(
 private fun CounterFooter(
     modifier: Modifier = Modifier
 ){
-
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        Button(
+            onClick = { /*TODO*/ },
+            modifier = modifier
+                .fillMaxWidth()
+        ) {
+            Text(text = "Reiniciar")
+        }
+    }
 }
 
 
