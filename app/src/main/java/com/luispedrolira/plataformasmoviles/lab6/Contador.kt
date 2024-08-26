@@ -74,7 +74,7 @@ fun CounterScreen(
                     },
                     totalChanges = counterState.increments + counterState.decrements + 1,
                     history = counterState.history + HistoryItem(
-                        value = counterState.counter,
+                        value = counterState.counter - 1,
                         type = HistoryItemType.DECREMENT
                     )
                 )
@@ -90,7 +90,7 @@ fun CounterScreen(
                     },
                     totalChanges = counterState.increments + counterState.decrements + 1,
                     history = counterState.history + HistoryItem(
-                        value = counterState.counter,
+                        value = counterState.counter + 1,
                         type = HistoryItemType.INCREMENT
                     )
                 )
