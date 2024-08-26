@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
@@ -29,8 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.luispedrolira.plataformasmoviles.ui.theme.PlataformasMovilesTheme
 
 val CounterStateSaver: Saver<CounterState, Any> = listSaver(
@@ -57,7 +62,6 @@ fun CounterScreen(
 
     Column(modifier = modifier) {
         CounterHeader(
-            modifier,
             counterState.counter,
             onDecrementClick = {
                 counterState = counterState.copy(
@@ -68,7 +72,11 @@ fun CounterScreen(
                     } else {
                         counterState.minValue
                     },
-                    totalChanges = counterState.increments + counterState.decrements + 1
+                    totalChanges = counterState.increments + counterState.decrements + 1,
+                    history = counterState.history + HistoryItem(
+                        value = counterState.counter,
+                        type = HistoryItemType.DECREMENT
+                    )
                 )
             },
             onIncrementClick = {
@@ -80,25 +88,33 @@ fun CounterScreen(
                     } else {
                         counterState.maxValue
                     },
-                    totalChanges = counterState.increments + counterState.decrements + 1
+                    totalChanges = counterState.increments + counterState.decrements + 1,
+                    history = counterState.history + HistoryItem(
+                        value = counterState.counter,
+                        type = HistoryItemType.INCREMENT
+                    )
                 )
             }
         )
         CounterStadistics(
-            modifier,
             counterState.increments,
             counterState.decrements,
             counterState.maxValue,
             counterState.minValue,
-            counterState.totalChanges
+            counterState.totalChanges,
+            counterState.history
         )
-        CounterFooter()
+        CounterFooter(
+            modifier,
+            onResetClick = {
+                counterState = CounterState()
+            }
+        )
     }
 }
 
 @Composable
 private fun CounterHeader(
-    modifier: Modifier = Modifier,
     counter: Int,
     onDecrementClick: () -> Unit,
     onIncrementClick: () -> Unit
@@ -165,12 +181,12 @@ private fun CounterHeader(
 
 @Composable
 private fun CounterStadistics(
-    modifier: Modifier = Modifier,
     increments: Int,
     decrements: Int,
     maxValue: Int,
     minValue: Int,
-    totalChanges: Int
+    totalChanges: Int,
+    historyItem: List<HistoryItem>
 ){
     Column(
         modifier = Modifier
@@ -201,9 +217,16 @@ private fun CounterStadistics(
             stadisticTitle = "Historial:",
             stadisticValue = ""
         )
-
-        LazyVerticalGrid(columns = GridCells.Fixed(5)) {
-
+        LazyVerticalGrid(
+            modifier = Modifier
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            columns = GridCells.Fixed(5)
+        ) {
+            items(historyItem.size) { index ->
+                HistoryValues(historyItem = historyItem[index])
+            }
         }
 
     }
@@ -211,7 +234,6 @@ private fun CounterStadistics(
 
 @Composable
 private fun ItemStadistics(
-    modifier: Modifier = Modifier,
     stadisticTitle: String,
     stadisticValue: String
 ){
@@ -234,16 +256,37 @@ private fun ItemStadistics(
 
 @Composable
 private fun HistoryValues(
-
+    historyItem: HistoryItem
 ){
+    val backgroundColor = when (historyItem.type){
+        HistoryItemType.INCREMENT -> Color(0xFF1a7d28)
+        HistoryItemType.DECREMENT -> MaterialTheme.colorScheme.error
+    }
 
+    Box(
+        modifier = Modifier
+            .size(60.dp)
+            .background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(8.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = historyItem.value.toString(),
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
 }
 
 
 
 @Composable
 private fun CounterFooter(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onResetClick: () -> Unit
 ){
     Column(
         modifier = Modifier
@@ -252,7 +295,7 @@ private fun CounterFooter(
         verticalArrangement = Arrangement.Bottom
     ) {
         Button(
-            onClick = { /*TODO*/ },
+            onClick = onResetClick,
             modifier = modifier
                 .fillMaxWidth()
         ) {
