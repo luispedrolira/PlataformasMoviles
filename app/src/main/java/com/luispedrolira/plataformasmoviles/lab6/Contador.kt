@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
@@ -23,27 +21,87 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier 
+import androidx.compose.ui.Modifier
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.luispedrolira.plataformasmoviles.ui.theme.PlataformasMovilesTheme
 
+val CounterStateSaver: Saver<CounterState, Any> = listSaver(
+    save = { listOf(it.counter, it.increments, it.decrements, it.maxValue, it.minValue, it.totalChanges) },
+    restore = {
+        CounterState(
+            counter = it[0] as Int,
+            increments = it[1] as Int,
+            decrements = it[2] as Int,
+            maxValue = it[3] as Int,
+            minValue = it[4] as Int,
+            totalChanges = it[5] as Int
+        )
+    }
+)
+
 @Composable
 fun CounterScreen(
     modifier: Modifier = Modifier
-){
-    Column(modifier = modifier) {
-        CounterHeader()
-        CounterStadistics()
-        CounterFooter()
+) {
+    var counterState by rememberSaveable(stateSaver = CounterStateSaver) {
+        mutableStateOf(CounterState())
     }
 
+    Column(modifier = modifier) {
+        CounterHeader(
+            modifier,
+            counterState.counter,
+            onDecrementClick = {
+                counterState = counterState.copy(
+                    counter = counterState.counter - 1,
+                    decrements = counterState.decrements + 1,
+                    minValue = if (counterState.counter - 1 < counterState.minValue || counterState.minValue == 0) {
+                        counterState.counter - 1
+                    } else {
+                        counterState.minValue
+                    },
+                    totalChanges = counterState.increments + counterState.decrements + 1
+                )
+            },
+            onIncrementClick = {
+                counterState = counterState.copy(
+                    counter = counterState.counter + 1,
+                    increments = counterState.increments + 1,
+                    maxValue = if (counterState.counter + 1 > counterState.maxValue) {
+                        counterState.counter + 1
+                    } else {
+                        counterState.maxValue
+                    },
+                    totalChanges = counterState.increments + counterState.decrements + 1
+                )
+            }
+        )
+        CounterStadistics(
+            modifier,
+            counterState.increments,
+            counterState.decrements,
+            counterState.maxValue,
+            counterState.minValue,
+            counterState.totalChanges
+        )
+        CounterFooter()
+    }
 }
 
 @Composable
 private fun CounterHeader(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    counter: Int,
+    onDecrementClick: () -> Unit,
+    onIncrementClick: () -> Unit
 ){
     //var contador_string = ""
 
@@ -71,7 +129,7 @@ private fun CounterHeader(
                         shape = CircleShape
                     )
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = onDecrementClick ) {
                     Icon(
                         Icons.Default.Remove,
                         contentDescription = null,
@@ -81,7 +139,7 @@ private fun CounterHeader(
             }
 
             Text(
-                text = "5",
+                text = counter.toString(),
                 style = MaterialTheme.typography.displayLarge
             )
 
@@ -92,7 +150,7 @@ private fun CounterHeader(
                         shape = CircleShape
                     )
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = onIncrementClick) {
                     Icon(
                         Icons.Default.Add,
                         contentDescription = null,
@@ -107,7 +165,12 @@ private fun CounterHeader(
 
 @Composable
 private fun CounterStadistics(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    increments: Int,
+    decrements: Int,
+    maxValue: Int,
+    minValue: Int,
+    totalChanges: Int
 ){
     Column(
         modifier = Modifier
@@ -116,23 +179,23 @@ private fun CounterStadistics(
 
         ItemStadistics(
             stadisticTitle = "Total incrementos:",
-            stadisticValue = "7"
+            stadisticValue = increments.toString()
         )
         ItemStadistics(
             stadisticTitle = "Total decrementos:",
-            stadisticValue = "2"
+            stadisticValue = decrements.toString()
         )
         ItemStadistics(
             stadisticTitle = "Valor máximo:",
-            stadisticValue = "5"
+            stadisticValue = maxValue.toString()
         )
         ItemStadistics(
             stadisticTitle = "Valor mínimo:",
-            stadisticValue = "1"
+            stadisticValue = minValue.toString()
         )
         ItemStadistics(
             stadisticTitle = "Total cambios:",
-            stadisticValue = "9"
+            stadisticValue = totalChanges.toString()
         )
         ItemStadistics(
             stadisticTitle = "Historial:",
@@ -173,7 +236,7 @@ private fun ItemStadistics(
 private fun HistoryValues(
 
 ){
-    //TODO: Valores del historial
+
 }
 
 

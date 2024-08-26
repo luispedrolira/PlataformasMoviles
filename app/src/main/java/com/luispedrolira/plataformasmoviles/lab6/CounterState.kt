@@ -6,5 +6,6 @@ data class CounterState(
     val decrements: Int = 0,
     val maxValue: Int = 0,
     val minValue: Int = 0,
+    val totalChanges: Int = 0,
     val history: List<HistoryItem> = emptyList()
 )

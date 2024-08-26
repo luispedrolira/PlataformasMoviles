@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.luispedrolira.plataformasmoviles.lab5.PantallaBasicFrontEnd
 import com.luispedrolira.plataformasmoviles.lab6.CounterScreen
+import com.luispedrolira.plataformasmoviles.lab6.PantallaLoginEps
 import com.luispedrolira.plataformasmoviles.ui.theme.PlataformasMovilesTheme
 
 class MainActivity : ComponentActivity() {
